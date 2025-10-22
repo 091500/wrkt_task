@@ -108,11 +108,9 @@ Body:
 }
    ```
 
-CURL Example 1:
+CURL Example:
    ```bash
-curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ \ 
-   "email": "testing%40example.com" \ 
- }' 'http://localhost:3000/api/v1/auth/register'
+curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d '{"email":"testing@example.com"}' 'http://localhost:3000/api/v1/auth/register'
    ```
 Response Body:
    ```json
@@ -143,9 +141,7 @@ Body:
 
 CURL Example:
    ```bash
-curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ \ 
-   "email": "testing%40example.com" \ 
- }' 'http://localhost:3000/api/v1/auth/login'
+curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d '{"email":"testing@example.com"}' 'http://localhost:3000/api/v1/auth/login'
    ```
 Response Body:
    ```json
@@ -233,9 +229,12 @@ Body:
 
 CURL Example:
    ```bash
-curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NjEyMTQ4NDJ9.u6E333kykHNPpRRyKREXT7CvWG4H8gi5Qi1qQvYJHuQ' -d '{ \ 
-   "amount": 20 \ 
- }' 'http://localhost:3000/api/v1/users/1/balance'
+curl -X PATCH \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NjEyMTQ4NDJ9.u6E333kykHNPpRRyKREXT7CvWG4H8gi5Qi1qQvYJHuQ" \
+  -d '{"amount": 20}' \
+  'http://localhost:3000/api/v1/users/1/balance'
    ```
 Response Body:
    ```json
@@ -269,10 +268,12 @@ Body:
 
 CURL Example:
    ```bash
-curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NjEyMTQ4NDJ9.u6E333kykHNPpRRyKREXT7CvWG4H8gi5Qi1qQvYJHuQ' -d '{ \ 
-   "recipient_id": 2, \ 
-   "amount": 5 \ 
- }' 'http://localhost:3000/api/v1/users/1/transfer_balance'
+curl -X PATCH \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NjEyMTQ4NDJ9.u6E333kykHNPpRRyKREXT7CvWG4H8gi5Qi1qQvYJHuQ" \
+  -d '{"recipient_id": 2, "amount": 5}' \
+  'http://localhost:3000/api/v1/users/1/transfer_balance'
    ```
 Response Body:
    ```json
