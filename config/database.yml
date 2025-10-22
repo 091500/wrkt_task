@@ -9,7 +9,7 @@ development:
 
 test:
   <<: *default
-  url: postgresql://localhost/wrkt_task_test
+  url: <%= ENV.fetch("DATABASE_URL") { 'postgresql://localhost/wrkt_task_test' } %>
 
 production:
   <<: *default
