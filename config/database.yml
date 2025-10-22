@@ -14,3 +14,9 @@ test:
 production:
   <<: *default
   url: <%= ENV.fetch("DATABASE_URL") { 'postgresql://localhost/wrkt_task_development?pool=5' } %>
+
+queue:
+  <<: *default
+
+cable:
+  <<: *default
