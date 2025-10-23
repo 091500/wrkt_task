@@ -7,7 +7,7 @@ class LoginUser
     if user
       context.user = user
     else
-      context.fail!(error: "User not found")
+      context.fail!(error: "User not found", error_code: 401)
     end
   end
 end

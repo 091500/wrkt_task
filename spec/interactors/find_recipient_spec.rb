@@ -22,7 +22,7 @@ describe FindRecipient do
         result = subject
         expect(result).to be_a_failure
         expect(result.error).to eq("Recipient not found")
-        expect(result.error_code).to eq(405)
+        expect(result.error_code).to eq(404)
       end
     end
   end

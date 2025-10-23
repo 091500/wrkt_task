@@ -9,8 +9,14 @@ class UpdateUserBalance
       context.fail!(error: "User not found", error_code: 404)
     end
 
-    unless amount.is_a?(Numeric)
-      context.fail!(error: "Invalid amount", error_code: 400)
+    begin
+      amount = BigDecimal(amount)
+    rescue ArgumentError, TypeError
+      context.fail!(error: "Invalid amount", error_code: 422)
+    end
+
+    if amount == 0
+      context.fail!(error: "Amount must be non-zero", error_code: 422)
     end
 
     new_balance = user.balance + amount
@@ -19,9 +25,12 @@ class UpdateUserBalance
       context.fail!(error: "Insufficient funds", error_code: 422)
     end
 
-    user.update!(balance: new_balance)
-    context.user = user
+    if amount > 0
+      FinanceTransaction.create!(recipient: context.user, amount: amount.abs, transaction_type: 'deposit')
+    else
+      FinanceTransaction.create!(sender: context.user, amount: amount.abs, transaction_type: 'withdrawal')
+    end
 
-    APILogger.info("[update balance][user #{user.id}] amount: #{amount}, new balance: #{user.balance}")
+    context.user = user.reload
   end
 end

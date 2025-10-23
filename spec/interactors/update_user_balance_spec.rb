@@ -4,10 +4,19 @@ describe UpdateUserBalance do
 
   subject { described_class.call(user: user, amount: amount) }
 
-  context "when update is successful" do
+  context "when positive amount" do
     it "updates the user's balance" do
       expect(subject).to be_success
       expect(subject.user.balance).to eq(150.0)
+    end
+  end
+
+  context "when negative amount" do
+    let(:amount) { -50.0 }
+
+    it "updates the user's balance" do
+      expect(subject).to be_success
+      expect(subject.user.balance).to eq(50.0)
     end
   end
 
@@ -27,7 +36,17 @@ describe UpdateUserBalance do
     it "fails with invalid amount error" do
       expect(subject).to be_failure
       expect(subject.error).to eq("Invalid amount")
-      expect(subject.error_code).to eq(400)
+      expect(subject.error_code).to eq(422)
+    end
+  end
+
+  context "when amount is 0" do
+    let(:amount) { 0 }
+
+    it "fails with invalid amount error" do
+      expect(subject).to be_failure
+      expect(subject.error).to eq("Amount must be non-zero")
+      expect(subject.error_code).to eq(422)
     end
   end
 

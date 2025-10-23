@@ -21,7 +21,7 @@ describe RegisterOrganizer do
     it "fails with appropriate error message" do
       result = subject
       expect(result).to be_a_failure
-      expect(result.error).to eq("Email can't be blank")
+      expect(result.error).to eq("Email can't be blank, Email is invalid")
     end
   end
 end

@@ -7,7 +7,7 @@ class AuthenticateUser
     if user
       context.token = JsonWebToken.encode(user_id: user.id)
     else
-      context.fail!(error: "Invalid credentials")
+      context.fail!(error: "Invalid credentials", error_code: 401)
     end
   end
 end

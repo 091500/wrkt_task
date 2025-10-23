@@ -41,10 +41,6 @@ gem "thruster", require: false
 # gem "image_processing", "~> 1.2"
 
 gem "pg"
-gem "grape"
-gem "grape-entity"
-gem "grape-swagger"
-gem "grape-swagger-rails"
 gem "jwt"
 gem "jsonapi-serializer"
 gem "interactor", "~> 3.0"
@@ -61,6 +57,7 @@ group :development, :test do
 
   gem "rspec-rails"
   gem "factory_bot_rails"
+  gem "rswag"
 end
 
 group :development do
