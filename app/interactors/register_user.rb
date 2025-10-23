@@ -6,9 +6,8 @@ class RegisterUser
 
     if user.save
       context.user = user
-      APILogger.info("[registration][user #{user.id}] email: #{user.email}")
     else
-      context.fail!(error: user.errors.full_messages.join(", "))
+      context.fail!(error: user.errors.full_messages.join(", "), error_code: 422)
     end
   end
 end

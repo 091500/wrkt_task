@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -10,8 +12,15 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root to: redirect("/api-docs")
 
-  mount API::Root => "/"
-  mount GrapeSwaggerRails::Engine => "/swagger"
+  namespace :api do
+    namespace :v1 do
+      post "register", to: "auth#register"
+      post "login", to: "auth#login"
+      get "me", to: "users#me"
+      patch "update_balance", to: "users#update_balance"
+      patch "transfer_balance", to: "users#transfer_balance"
+    end
+  end
 end

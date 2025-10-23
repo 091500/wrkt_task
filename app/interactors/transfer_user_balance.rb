@@ -15,27 +15,28 @@ class TransferUserBalance
     end
 
     if user.id == recipient.id
-      context.fail!(error: "Cannot transfer to self", error_code: 402)
+      context.fail!(error: "Cannot transfer to self", error_code: 422)
     end
 
-    if amount.to_d <= 0
-      context.fail!(error: "Transfer amount must be greater than zero")
+    begin
+      amount = BigDecimal(amount)
+    rescue ArgumentError, TypeError
+      context.fail!(error: "Invalid amount", error_code: 422)
+    end
+
+    if amount <= 0
+      context.fail!(error: "Transfer amount must be greater than zero", error_code: 422)
     end
 
     if user.balance < amount
       context.fail!(error: "Insufficient funds", error_code: 422)
     end
 
-    ActiveRecord::Base.transaction do
-      user.update!(balance: user.balance - amount)
-      recipient.update!(balance: recipient.balance + amount)
-    end
+    FinanceTransaction.create!(sender: user, recipient: recipient, amount: amount.abs, transaction_type: "transfer")
 
-    context.user = user
-    context.recipient = recipient
-
-    APILogger.info("[transfer balance][user #{user.id} → #{recipient.id}}] amount: #{amount}")
+    context.user = user.reload
+    context.recipient = recipient.reload
   rescue ActiveRecord::RecordInvalid => e
-    context.fail!(error: e.message)
+    context.fail!(error: e.message, error_code: 422)
   end
 end

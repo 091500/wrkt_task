@@ -1,0 +1,191 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/v1/register":
+    post:
+      summary: Registers a new user
+      tags:
+      - Auth
+      parameters: []
+      responses:
+        '200':
+          description: user registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      attributes:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+        '422':
+          description: invalid email or organizer fails
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+              - email
+  "/api/v1/login":
+    post:
+      summary: Logs in a user
+      tags:
+      - Auth
+      parameters: []
+      responses:
+        '200':
+          description: login successful
+        '401':
+          description: login failed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+              - email
+  "/api/v1/me":
+    get:
+      summary: Retrieves current user details
+      tags:
+      - Users
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        description: Bearer token
+        schema:
+          type: string
+      responses:
+        '200':
+          description: user found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      attributes:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+        '401':
+          description: unauthorized
+  "/api/v1/update_balance":
+    patch:
+      summary: Updates user balance
+      tags:
+      - Users
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: balance updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      attributes:
+                        type: object
+                        properties:
+                          balance:
+                            type: string
+        '422':
+          description: invalid amount or insufficient funds
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+              required:
+              - amount
+  "/api/v1/transfer_balance":
+    patch:
+      summary: Transfers balance to another user
+      tags:
+      - Users
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: transfer successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      attributes:
+                        type: object
+                        properties:
+                          balance:
+                            type: string
+        '422':
+          description: invalid amount or insufficient funds
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipient_id:
+                  type: integer
+                amount:
+                  type: number
+              required:
+              - recipient_id
+              - amount
+components:
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+servers:
+- url: http://localhost:3000
+  description: Development server

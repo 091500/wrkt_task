@@ -39,7 +39,7 @@ describe TransferUserBalance do
     it "fails with cannot transfer to self error" do
       expect(subject).to be_failure
       expect(subject.error).to eq("Cannot transfer to self")
-      expect(subject.error_code).to eq(402)
+      expect(subject.error_code).to eq(422)
     end
   end
 
@@ -63,12 +63,12 @@ describe TransferUserBalance do
 
   context "when ActiveRecord::RecordInvalid is raised" do
     before do
-      allow(user).to receive(:update!).and_raise(ActiveRecord::RecordInvalid.new(user))
+      allow(FinanceTransaction).to receive(:create!).and_raise(ActiveRecord::RecordInvalid.new)
     end
 
     it "fails with the exception message" do
       expect(subject).to be_failure
-      expect(subject.error).to eq("Validation failed: ")
+      expect(subject.error).to eq("Record invalid")
     end
   end
 end

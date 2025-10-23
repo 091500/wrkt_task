@@ -1,6 +1,6 @@
 describe TransferUserBalanceOrganizer do
   subject do
-    described_class.call(user_id: user_id, recipient_id: recipient_id, amount: amount)
+    described_class.call(user: user, recipient_id: recipient_id, amount: amount)
   end
 
   let(:user) { create(:user, email: "sender@example.com", balance: 200.0) }
@@ -31,8 +31,8 @@ describe TransferUserBalanceOrganizer do
       end
     end
 
-    context "when user is not found" do
-      let(:user_id) { 0 }
+    context "when user is not set" do
+      let(:user) { nil }
 
       it "fails with User not found error" do
         result = subject
