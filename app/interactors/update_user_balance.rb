@@ -26,9 +26,9 @@ class UpdateUserBalance
     end
 
     if amount > 0
-      FinanceTransaction.create!(recipient: context.user, amount: amount.abs, transaction_type: 'deposit')
+      FinanceTransaction.create!(recipient: context.user, amount: amount.abs, transaction_type: "deposit")
     else
-      FinanceTransaction.create!(sender: context.user, amount: amount.abs, transaction_type: 'withdrawal')
+      FinanceTransaction.create!(sender: context.user, amount: amount.abs, transaction_type: "withdrawal")
     end
 
     context.user = user.reload

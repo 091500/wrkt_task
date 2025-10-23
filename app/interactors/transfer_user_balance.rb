@@ -32,7 +32,7 @@ class TransferUserBalance
       context.fail!(error: "Insufficient funds", error_code: 422)
     end
 
-    FinanceTransaction.create!(sender: user, recipient: recipient, amount: amount.abs, transaction_type: 'transfer')
+    FinanceTransaction.create!(sender: user, recipient: recipient, amount: amount.abs, transaction_type: "transfer")
 
     context.user = user.reload
     context.recipient = recipient.reload
