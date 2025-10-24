@@ -6,6 +6,7 @@ class UpdateUserBalance
     amount = BigDecimal(context.amount)
 
     ActiveRecord::Base.transaction do
+      user.lock!
       transaction_amount = amount.to_d.abs
       if amount.positive?
         FinanceTransaction.create!(recipient: context.user, amount: transaction_amount, transaction_type: "deposit")

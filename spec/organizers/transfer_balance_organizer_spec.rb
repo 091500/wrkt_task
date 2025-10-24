@@ -1,12 +1,10 @@
 describe TransferBalanceOrganizer do
   subject do
-    described_class.call(user: user, recipient_id: recipient_id, amount: amount)
+    described_class.call(user: user, recipient: recipient, amount: amount)
   end
 
   let(:user) { create(:user, email: "sender@example.com", balance: 200.0) }
   let(:recipient) { create(:user, email: "recipient@example.com", balance: 50.0) }
-  let(:user_id) { user.id }
-  let(:recipient_id) { recipient.id }
   let(:amount) { 75.0 }
 
   context ".call" do
@@ -42,7 +40,7 @@ describe TransferBalanceOrganizer do
     end
 
     context "when recipient is not found" do
-      let(:recipient_id) { 0 }
+      let(:recipient) { nil }
 
       it "fails with Recipient not found error" do
         result = subject

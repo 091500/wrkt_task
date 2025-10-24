@@ -26,7 +26,7 @@ describe API::V1::AuthController, type: :request do
 
     context 'when organizer fails' do
       before do
-        allow(RegisterOrganizer).to receive(:call)
+        allow(RegisterUser).to receive(:call)
           .and_return(OpenStruct.new(success?: false, error: 'Something went wrong'))
       end
 

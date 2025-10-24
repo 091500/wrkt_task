@@ -29,7 +29,8 @@ describe API::V1::UsersController, type: :request do
 
     context 'when error occurs in current_user' do
       before do
-        allow(JsonWebToken).to receive(:decode)
+        allow(JsonWebToken)
+          .to receive(:decode)
           .and_raise(JWT::DecodeError.new("Unexpected error"))
       end
 

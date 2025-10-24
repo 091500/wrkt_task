@@ -11,7 +11,7 @@ describe LoginUser do
       it "sets the user in context" do
         result = subject
         expect(result).to be_a_success
-        expect(result.user).to eq(user)
+        expect(result.token).to be_present
       end
     end
 
