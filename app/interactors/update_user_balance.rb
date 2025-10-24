@@ -3,34 +3,21 @@ class UpdateUserBalance
 
   def call
     user = context.user
-    amount = context.amount
+    amount = BigDecimal(context.amount)
 
-    unless user
-      context.fail!(error: "User not found", error_code: 404)
-    end
-
-    begin
-      amount = BigDecimal(amount)
-    rescue ArgumentError, TypeError
-      context.fail!(error: "Invalid amount", error_code: 422)
-    end
-
-    if amount == 0
-      context.fail!(error: "Amount must be non-zero", error_code: 422)
-    end
-
-    new_balance = user.balance + amount
-
-    if new_balance < 0
-      context.fail!(error: "Insufficient funds", error_code: 422)
-    end
-
-    if amount > 0
-      FinanceTransaction.create!(recipient: context.user, amount: amount.abs, transaction_type: "deposit")
-    else
-      FinanceTransaction.create!(sender: context.user, amount: amount.abs, transaction_type: "withdrawal")
+    ActiveRecord::Base.transaction do
+      transaction_amount = amount.to_d.abs
+      if amount.positive?
+        FinanceTransaction.create!(recipient: context.user, amount: transaction_amount, transaction_type: "deposit")
+        user.increment!(:balance, transaction_amount)
+      else
+        FinanceTransaction.create!(sender: context.user, amount: transaction_amount, transaction_type: "withdrawal")
+        user.decrement!(:balance, transaction_amount)
+      end
     end
 
     context.user = user.reload
+  rescue ActiveRecord::RecordInvalid => e
+    context.fail!(error: e.message, error_code: 422)
   end
 end
