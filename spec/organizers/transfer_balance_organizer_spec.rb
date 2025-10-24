@@ -1,4 +1,4 @@
-describe TransferUserBalanceOrganizer do
+describe TransferBalanceOrganizer do
   subject do
     described_class.call(user: user, recipient_id: recipient_id, amount: amount)
   end

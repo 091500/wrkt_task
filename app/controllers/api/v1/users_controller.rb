@@ -7,7 +7,7 @@ class API::V1::UsersController < ActionController::API
   end
 
   def update_balance
-    result = UpdateUserBalance.call(user: current_user, amount: params[:amount])
+    result = UpdateUserBalanceOrganizer.call(user: current_user, amount: params[:amount])
 
     if result.success?
       jsonapi_response(result.user, UserSerializer)
@@ -17,7 +17,7 @@ class API::V1::UsersController < ActionController::API
   end
 
   def transfer_balance
-    result = TransferUserBalanceOrganizer.call(
+    result = TransferBalanceOrganizer.call(
       user: current_user,
       recipient_id: params[:recipient_id],
       amount: params[:amount]

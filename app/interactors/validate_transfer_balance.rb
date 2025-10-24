@@ -1,4 +1,4 @@
-class TransferUserBalance
+class ValidateTransferBalance
   include Interactor
 
   def call
@@ -31,12 +31,5 @@ class TransferUserBalance
     if user.balance < amount
       context.fail!(error: "Insufficient funds", error_code: 422)
     end
-
-    FinanceTransaction.create!(sender: user, recipient: recipient, amount: amount.abs, transaction_type: "transfer")
-
-    context.user = user.reload
-    context.recipient = recipient.reload
-  rescue ActiveRecord::RecordInvalid => e
-    context.fail!(error: e.message, error_code: 422)
   end
 end

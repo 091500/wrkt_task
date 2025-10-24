@@ -20,43 +20,14 @@ describe UpdateUserBalance do
     end
   end
 
-  context "when user is not found" do
-    let(:user) { nil }
-
-    it "fails with user not found error" do
-      expect(subject).to be_failure
-      expect(subject.error).to eq("User not found")
-      expect(subject.error_code).to eq(404)
+  context "when ActiveRecord::RecordInvalid is raised" do
+    before do
+      allow_any_instance_of(User).to receive(:increment!).and_raise(ActiveRecord::RecordInvalid.new(user))
     end
-  end
 
-  context "when amount is invalid" do
-    let(:amount) { "invalid" }
-
-    it "fails with invalid amount error" do
+    it "fails with the exception message" do
       expect(subject).to be_failure
-      expect(subject.error).to eq("Invalid amount")
-      expect(subject.error_code).to eq(422)
-    end
-  end
-
-  context "when amount is 0" do
-    let(:amount) { 0 }
-
-    it "fails with invalid amount error" do
-      expect(subject).to be_failure
-      expect(subject.error).to eq("Amount must be non-zero")
-      expect(subject.error_code).to eq(422)
-    end
-  end
-
-  context "when user has insufficient funds" do
-    let(:amount) { -200.0 }
-
-    it "fails with insufficient funds error" do
-      expect(subject).to be_failure
-      expect(subject.error).to eq("Insufficient funds")
-      expect(subject.error_code).to eq(422)
+      expect(subject.error).to eq("Validation failed: ")
     end
   end
 end
