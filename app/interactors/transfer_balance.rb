@@ -7,6 +7,8 @@ class TransferBalance
     amount = BigDecimal(context.amount)
 
     ActiveRecord::Base.transaction do
+      user.lock!
+      recipient.lock!
       transaction_amount = amount.abs
       FinanceTransaction.create!(sender: user, recipient: recipient, amount: transaction_amount, transaction_type: "transfer")
       user.decrement!(:balance, transaction_amount)

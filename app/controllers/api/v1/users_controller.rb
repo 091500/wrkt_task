@@ -19,7 +19,7 @@ class API::V1::UsersController < ActionController::API
   def transfer_balance
     result = TransferBalanceOrganizer.call(
       user: current_user,
-      recipient_id: params[:recipient_id],
+      recipient: User.find_by(id: params[:recipient_id]),
       amount: params[:amount]
     )
 

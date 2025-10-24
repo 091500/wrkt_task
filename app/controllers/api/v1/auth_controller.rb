@@ -2,7 +2,7 @@ class API::V1::AuthController < ActionController::API
   include ApplicationHelper
 
   def register
-    result = RegisterOrganizer.call(email: params[:email])
+    result = RegisterUser.call(email: params[:email])
 
     if result.success?
       jsonapi_response(OpenStruct.new(token: result.token), AuthTokenSerializer)
@@ -12,7 +12,7 @@ class API::V1::AuthController < ActionController::API
   end
 
   def login
-    result = LoginOrganizer.call(email: params[:email])
+    result = LoginUser.call(email: params[:email])
 
     if result.success?
       jsonapi_response(OpenStruct.new(token: result.token), AuthTokenSerializer)

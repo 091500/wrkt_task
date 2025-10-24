@@ -204,7 +204,7 @@ Body:
 }
 ```
 
-CURL Example:
+CURL Example (add 20 to balance):
 ```bash
 curl -X PATCH \
   --header "Content-Type: application/json" \
@@ -222,6 +222,31 @@ Response Body:
     "attributes": {
       "email": "testing@example.com",
       "balance": "20.0"
+    }
+  }
+}
+```
+
+---
+
+CURL Example (subtract 10 from balance):
+```bash
+curl -X PATCH \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NjEyMTQ4NDJ9.u6E333kykHNPpRRyKREXT7CvWG4H8gi5Qi1qQvYJHuQ" \
+  -d '{"amount": -10}' \
+  'http://localhost:3000/api/v1/update_balance'
+```
+Response Body:
+```json
+{
+  "data": {
+    "id": "1",
+    "type": "user",
+    "attributes": {
+      "email": "testing@example.com",
+      "balance": "10.0"
     }
   }
 }
@@ -247,17 +272,17 @@ Body:
 }
 ```
 
-CURL Example:
-   ```bash
+CURL Example (transfer 5 to user with ID 2):
+```bash
 curl -X PATCH \
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NjEyMTQ4NDJ9.u6E333kykHNPpRRyKREXT7CvWG4H8gi5Qi1qQvYJHuQ" \
   -d '{"recipient_id": 2, "amount": 5}' \
   'http://localhost:3000/api/v1/transfer_balance'
-   ```
+```
 Response Body:
-   ```json
+```json
 {
   "data": {
     "id": "1",
@@ -268,4 +293,4 @@ Response Body:
     }
   }
 }
-   ```
+```

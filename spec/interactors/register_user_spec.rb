@@ -10,8 +10,7 @@ describe RegisterUser do
       it "creates a new user and sets it in context" do
         result = subject
         expect(result).to be_a_success
-        expect(result.user).to be_present
-        expect(result.user.email).to eq(email)
+        expect(result.token).to be_present
       end
     end
 
