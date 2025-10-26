@@ -25,10 +25,12 @@ describe 'API::V1::Users', type: :request do
             data: {
               type: :object,
               properties: {
+                id: { type: :string },
+                type: { type: :string },
                 attributes: {
                 type: :object,
                   properties: {
-                    email: { type: :string }
+                    balance: { type: :string }
                   }
                 }
               }
@@ -43,6 +45,10 @@ describe 'API::V1::Users', type: :request do
       end
 
       response '401', 'unauthorized' do
+        schema type: :object,
+          properties: {
+            error: { type: :string }
+          }
         let(:Authorization) { "Bearer something" }
 
         run_test!
@@ -71,6 +77,8 @@ describe 'API::V1::Users', type: :request do
             data: {
               type: :object,
               properties: {
+                id: { type: :string },
+                type: { type: :string },
                 attributes: {
                   type: :object,
                   properties: {
@@ -93,7 +101,6 @@ describe 'API::V1::Users', type: :request do
           properties: {
             error: { type: :string }
           }
-
 
         let(:amount) { { amount: "sdf" } }
 
@@ -127,6 +134,8 @@ describe 'API::V1::Users', type: :request do
             data: {
               type: :object,
               properties: {
+                id: { type: :string },
+                type: { type: :string },
                 attributes: {
                   type: :object,
                   properties: {

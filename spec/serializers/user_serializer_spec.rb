@@ -7,7 +7,6 @@ describe UserSerializer do
     it "includes the correct attributes" do
       expect(subject[:data][:id]).to eq(user.id.to_s)
       expect(subject[:data][:type]).to eq(:user)
-      expect(subject[:data][:attributes][:email]).to eq("test@user.com")
       expect(subject[:data][:attributes][:balance]).to eq(150.0)
     end
   end

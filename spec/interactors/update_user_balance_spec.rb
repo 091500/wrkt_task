@@ -9,6 +9,12 @@ describe UpdateUserBalance do
       expect(subject).to be_success
       expect(subject.user.balance).to eq(150.0)
     end
+
+    it 'creates a deposit transaction' do
+      expect {
+        subject
+      }.to change { FinanceTransaction.where(recipient: user, transaction_type: 'deposit', amount: amount.abs).count }.by(1)
+    end
   end
 
   context "when negative amount" do
@@ -17,6 +23,47 @@ describe UpdateUserBalance do
     it "updates the user's balance" do
       expect(subject).to be_success
       expect(subject.user.balance).to eq(50.0)
+    end
+
+    it 'creates a withdrawal transaction' do
+      expect {
+        subject
+      }.to change { FinanceTransaction.where(sender: user, transaction_type: 'withdrawal', amount: amount.abs).count }.by(1)
+    end
+  end
+
+  context 'when invalid amount' do
+    let(:amount) { 'test' }
+
+    it 'fails with the appropriate error message' do
+      expect(subject).to be_failure
+      expect(subject.error).to eq('Invalid amount')
+    end
+  end
+
+  context "when amount is zero" do
+    let(:amount) { 0.0 }
+    it "fails with amount must be non-zero error" do
+      expect(subject).to be_failure
+      expect(subject.error).to eq("Amount must be non-zero")
+    end
+  end
+
+  context "when insufficient funds" do
+    let(:amount) { -150.0 }
+
+    it "fails with insufficient funds error" do
+      expect(subject).to be_failure
+      expect(subject.error).to eq("Insufficient funds")
+    end
+  end
+
+  context "when user not found" do
+    let(:user) { nil }
+
+    it "fails with user not found error" do
+      expect(subject).to be_failure
+      expect(subject.error).to eq("User not found")
     end
   end
 

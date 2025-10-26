@@ -11,16 +11,65 @@ describe TransferBalance do
       expect(subject.user.balance).to eq(70.0)
       expect(subject.recipient.balance).to eq(80.0)
     end
+
+    it 'creates a transfer transaction' do
+      expect {
+        subject
+      }.to change { FinanceTransaction.where(sender: user, recipient: recipient, transaction_type: 'transfer', amount: amount).count }.by(1)
+    end
   end
 
-  context "when ActiveRecord::RecordInvalid is raised" do
-    before do
-      allow(FinanceTransaction).to receive(:create!).and_raise(ActiveRecord::RecordInvalid.new)
-    end
+  context "when user has insufficient funds" do
+    let(:amount) { 150.0 }
 
-    it "fails with the exception message" do
+    it "fails with insufficient funds error" do
       expect(subject).to be_failure
-      expect(subject.error).to eq("Record invalid")
+      expect(subject.error).to eq("Insufficient funds")
+    end
+  end
+
+  context "when transferring to self" do
+    let(:recipient) { user }
+
+    it "fails with cannot transfer to self error" do
+      expect(subject).to be_failure
+      expect(subject.error).to eq("Cannot transfer to self")
+    end
+  end
+
+  context "when amount is negative" do
+    let(:amount) { -20.0 }
+
+    it "fails with invalid amount error" do
+      expect(subject).to be_failure
+      expect(subject.error).to eq("Transfer amount must be greater than zero")
+    end
+  end
+
+  context "when amount is invalid" do
+    let(:amount) { 'invalid' }
+
+    it "fails with invalid amount error" do
+      expect(subject).to be_failure
+      expect(subject.error).to eq("Invalid amount")
+    end
+  end
+
+  context "when user not found" do
+    let(:user) { nil }
+
+    it "fails with user not found error" do
+      expect(subject).to be_failure
+      expect(subject.error).to eq("User not found")
+    end
+  end
+
+  context "when recipient not found" do
+    let(:recipient) { nil }
+
+    it "fails with recipient not found error" do
+      expect(subject).to be_failure
+      expect(subject.error).to eq("Recipient not found")
     end
   end
 end

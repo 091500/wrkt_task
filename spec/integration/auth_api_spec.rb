@@ -16,24 +16,30 @@ describe 'API::V1::Auth', type: :request do
 
       response '200', 'user registered' do
         schema type: :object,
-        properties: {
-          data: {
-            type: :object,
-            properties: {
-              attributes: {
-                type: :object,
-                properties: {
-                  token: { type: :string }
+          properties: {
+            data: {
+              type: :object,
+              properties: {
+                id: { type: :string },
+                type: { type: :string },
+                attributes: {
+                  type: :object,
+                  properties: {
+                    token: { type: :string }
+                  }
                 }
               }
             }
           }
-        }
         let(:email) { { email: 'user@example.com' } }
         run_test!
       end
 
-      response '422', 'invalid email or organizer fails' do
+      response '422', 'invalid email' do
+        schema type: :object,
+          properties: {
+            error: { type: :string }
+          }
         let(:email) { { email: 'invalid' } }
         run_test!
       end
@@ -58,6 +64,8 @@ describe 'API::V1::Auth', type: :request do
             data: {
               type: :object,
               properties: {
+                id: { type: :string },
+                type: { type: :string },
                 attributes: {
                   type: :object,
                   properties: {
@@ -74,6 +82,10 @@ describe 'API::V1::Auth', type: :request do
       end
 
       response '401', 'login failed' do
+        schema type: :object,
+          properties: {
+            error: { type: :string }
+          }
         let(:email) { { email: 'not_existing@example.com' } }
         run_test!
       end
