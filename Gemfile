@@ -44,6 +44,7 @@ gem "pg"
 gem "jwt"
 gem "jsonapi-serializer"
 gem "interactor", "~> 3.0"
+gem "rswag"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -57,7 +58,6 @@ group :development, :test do
 
   gem "rspec-rails"
   gem "factory_bot_rails"
-  gem "rswag"
 end
 
 group :development do
