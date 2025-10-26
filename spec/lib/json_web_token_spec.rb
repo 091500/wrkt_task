@@ -35,5 +35,12 @@ describe JsonWebToken do
         expect(decoded_payload).to be_nil
       end
     end
+
+    context "with a nil token" do
+      it "returns nil" do
+        decoded_payload = JsonWebToken.decode(nil)
+        expect(decoded_payload).to be_nil
+      end
+    end
   end
 end

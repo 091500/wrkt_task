@@ -17,7 +17,7 @@ module Authenticatable
       render json: { error: "Unauthorized" }, status: :unauthorized
       return
     end
-    @current_user = User.find(decoded[:user_id]) if decoded
+    @current_user = User.find(decoded[:user_id])
   rescue ActiveRecord::RecordNotFound, JWT::DecodeError
     render json: { error: "Unauthorized" }, status: :unauthorized
   end

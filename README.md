@@ -4,6 +4,10 @@ This is a Ruby on Rails **8.0.3** application built as a **JSON API backend**.
 All API responses follow the [JSON:API](https://jsonapi.org/) specification and are secured using **JWT** tokens.
 Business logic is organized using the [Interactor](https://github.com/collectiveidea/interactor) gem.
 
+The application includes endpoints for user registration, authentication, balance management, and balance transfer between users.
+To use the API, clients must first register or log in to receive a JWT token, which is then used for authenticated requests.
+Users can modify their balance and transfer funds to other users, with all operations validated to ensure data integrity.
+
 ---
 
 ## Requirements
@@ -45,14 +49,24 @@ http://localhost:3000
 
 ## API
 
-- The API is implemented using the Grape gem.
 - The OpenAPI / Swagger documentation is located at:
 
 http://localhost:3000/api-docs
 
-- All responses follow the JSON:API format.
-- Requests are authenticated using JWT tokens.
+Responses follow the JSON:API format.
+Following requests are do not require authentication:
+- `POST /api/v1/register` - Register a new user and receive a JWT token
+- `POST /api/v1/login` - Login and receive a JWT token
 
+Following requests are authenticated using JWT tokens:
+- `GET /api/v1/me` - Get current user details
+- `PATCH /api/v1/update_balance` - Modify user balance
+- `PATCH /api/v1/transfer_balance` - Transfer balance to another user
+
+## Models
+- **Token:** Represents JWT tokens for authentication (not persisted in the database).
+- **User:** Represents a user in the system with attributes like email and balance.
+- **Transaction:** Represents balance modification and transfer transactions between users.
 
 ## Running Tests
 
@@ -83,11 +97,10 @@ bundle exec brakeman
 ## Project Structure
 ```bash
 app/
-├── app/controllers/api/   # Grape API endpoints
+├── app/controllers/api/   # API Controllers
 ├── models/                # ActiveRecord models
 ├── serializers/           # JSONAPI serializers
 ├── interactors/           # Business logic using Interactor gem
-├── organizers/            # Organizers for complex workflows (Interactor pattern)
 ├── lib/                   # Custom modules and utilities
 ├── spec/                  # RSpec tests
 ├── spec/integration/      # Integration tests for API endpoints
@@ -180,7 +193,6 @@ Response Body:
     "id": "1",
     "type": "user",
     "attributes": {
-      "email": "testing@example.com",
       "balance": "0.0"
     }
   }
@@ -220,7 +232,6 @@ Response Body:
     "id": "1",
     "type": "user",
     "attributes": {
-      "email": "testing@example.com",
       "balance": "20.0"
     }
   }
@@ -245,7 +256,6 @@ Response Body:
     "id": "1",
     "type": "user",
     "attributes": {
-      "email": "testing@example.com",
       "balance": "10.0"
     }
   }
@@ -288,7 +298,6 @@ Response Body:
     "id": "1",
     "type": "user",
     "attributes": {
-      "email": "testing@example.com",
       "balance": "15.0"
     }
   }

@@ -2,7 +2,7 @@ describe API::V1::UsersController, type: :request do
   let(:base_path) { '/api/v1' }
   let(:email) { 'user@example.com' }
   let(:balance) { 0 }
-  let(:user) { create(:user, email: email, balance: balance) }
+  let!(:user) { create(:user, email: email, balance: balance) }
   let(:headers) { { 'Authorization' => "Bearer #{token}" } }
   let(:token) do
     post "/api/v1/login", params: { email: email }
@@ -10,20 +10,16 @@ describe API::V1::UsersController, type: :request do
   end
 
   describe 'GET /me' do
-    before do
-      user
-    end
-
     it 'returns current user details' do
       get "#{base_path}/me", headers: headers
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
-      expect(json['data']['attributes']['email']).to eq(user.email)
+      expect(json['data']['id']).to eq(user.id.to_s)
     end
 
     it 'returns 401 if not authenticated' do
-      get "#{base_path}/me"
+      get "#{base_path}/me", headers: {}
       expect(response).to have_http_status(:unauthorized)
     end
 
@@ -42,10 +38,6 @@ describe API::V1::UsersController, type: :request do
   end
 
   describe 'PATCH /update_balance' do
-    before(:each) do
-      user
-    end
-
     context 'when successful' do
       it 'updates balance' do
         patch "#{base_path}/update_balance", params: { amount: 50 }, headers: headers
@@ -81,10 +73,6 @@ describe API::V1::UsersController, type: :request do
   describe 'PATCH /transfer_balance' do
     let(:balance) { 100.0 }
     let(:recipient) { create(:user, email: 'recipient@example.com', balance: 0) }
-
-    before(:each) do
-      user
-    end
 
     context 'when successful' do
       it 'transfers successfully' do

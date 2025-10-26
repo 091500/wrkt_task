@@ -21,13 +21,24 @@ paths:
                   data:
                     type: object
                     properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
                       attributes:
                         type: object
                         properties:
                           token:
                             type: string
         '422':
-          description: invalid email or organizer fails
+          description: invalid email
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
       requestBody:
         content:
           application/json:
@@ -84,13 +95,24 @@ paths:
                   data:
                     type: object
                     properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
                       attributes:
                         type: object
                         properties:
-                          email:
+                          balance:
                             type: string
         '401':
           description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
   "/api/v1/update_balance":
     patch:
       summary: Updates user balance
@@ -110,6 +132,10 @@ paths:
                   data:
                     type: object
                     properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
                       attributes:
                         type: object
                         properties:
@@ -153,6 +179,10 @@ paths:
                   data:
                     type: object
                     properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
                       attributes:
                         type: object
                         properties:
