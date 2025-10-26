@@ -2,8 +2,8 @@ require 'swagger_helper'
 
 describe 'API::V1::Users', type: :request do
   let(:email) { 'user@example.com' }
-  let(:user) { create(:user, email: email, balance: 100) }
-  let(:recipient) { create(:user, email: "recipient@email.com", balance: 0) }
+  let!(:user) { create(:user, email: email, balance: 100) }
+  let!(:recipient) { create(:user, email: "recipient@email.com", balance: 0) }
   let(:token) do
     post "/api/v1/login", params: { email: email }
     JSON.parse(response.body)['data']['attributes']['token']
@@ -36,10 +36,6 @@ describe 'API::V1::Users', type: :request do
               }
             }
           }
-
-        before do
-          user
-        end
 
         run_test!
       end
@@ -89,10 +85,6 @@ describe 'API::V1::Users', type: :request do
             }
           }
 
-        before do
-          user
-        end
-
         run_test!
       end
 
@@ -103,10 +95,6 @@ describe 'API::V1::Users', type: :request do
           }
 
         let(:amount) { { amount: "sdf" } }
-
-        before do
-          user
-        end
 
         run_test!
       end
@@ -146,11 +134,6 @@ describe 'API::V1::Users', type: :request do
             }
           }
 
-        before do
-          user
-          recipient
-        end
-
         let(:transfer) { { recipient_id: recipient.id, amount: 20 } }
 
         run_test!
@@ -161,11 +144,6 @@ describe 'API::V1::Users', type: :request do
           properties: {
             error: { type: :string }
           }
-
-        before do
-          user
-          recipient
-        end
 
         let(:transfer) { { recipient_id: recipient.id, amount: 120 } }
 
