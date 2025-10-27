@@ -8,9 +8,9 @@ class TransferBalance
 
   def call
     ActiveRecord::Base.transaction do
+      lock_user!
+      lock_recipient!
       validate!
-      user.lock!
-      recipient.lock!
       create_transaction
       update_balances
     end
@@ -81,5 +81,13 @@ class TransferBalance
   def update_balances
     user.decrement!(:balance, amount)
     recipient.increment!(:balance, amount)
+  end
+
+  def lock_user!
+    user&.lock!
+  end
+
+  def lock_recipient!
+    recipient&.lock!
   end
 end

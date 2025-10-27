@@ -8,8 +8,8 @@ class UpdateUserBalance
 
   def call
     ActiveRecord::Base.transaction do
+      lock_user!
       validate!
-      user.lock!
       create_transaction(user, transaction_amount, amount.positive?)
       update_user_balance(user, transaction_amount, amount.positive?)
     end
@@ -72,5 +72,9 @@ class UpdateUserBalance
 
   def update_user_balance(user, amount, is_deposit)
     is_deposit ? user.increment!(:balance, amount) : user.decrement!(:balance, amount)
+  end
+
+  def lock_user!
+    user&.lock!
   end
 end
